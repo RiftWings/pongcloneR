@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+</head>
+<body>
+<p>Mouse is at coordinates: <span></span>.</p>
+
+
+<canvas id="myCanvas" width="160" height="144" style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML canvas tag.</canvas>
+
+<script>
+    $(document).ready(function(){
+  $(document).mousemove(function(event){
+    $("span").text(event.pageX + ", " + event.pageY);
+    lPY = event.pageY - canvasOffsetY - lPHeight/2;
+    // console.log(event)
+    console.log (lPY)
+  });
+});
+
+$(document).keydown(function(e){
+  console.log(e.key)
+  if (e.key == "ArrowUp") {
+    movePaddleUp()
+  }
+});
+
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+// Create gradient
+var grd = ctx.createLinearGradient(0,0,200,0);
+grd.addColorStop(0,"red");
+grd.addColorStop(1,"white");
+// Fill with gradient
+ctx.fillStyle = grd;
+// ctx.fillRect(10,10,150,80);
+
+let canvasOffsetX = 9;
+let canvasOffsetY = 70;
+let screenWidth = 160;
+let screenHeight = 144;
+let ballWidth = 6;
+let ballHeight = 6;
+let ballX = screenWidth/2 - ballWidth/2;
+let ballY = screenHeight/2 - ballHeight/2;
+let lPX = 0;
+let lPY = 0;
+let lPWidth = 6;
+let lPHeight = 60;
+
+let ballXVelocity = 1;
+let ballYVelocity = 1;
+
+function ballColPaddle() {
+if ( (ballX <= lPX + lPWidth) && (ballX >= lPX) ) {
+    if ( (ballY <= lPY + lPHeight) && (ballY >= lPY) ) {
+        return true
+    }
+};
+}
+
+function clearScreen() {
+    ctx.fillStyle = "white";
+    ctx.fillRect(0,0,screenWidth,screenHeight);
+}
+function drawRect(x,y,width,height, color="black") {
+    ctx.fillStyle = color;
+    ctx.fillRect(x,y,width,height);
+}
+
+function renderBall() {
+    // ctx.fillRect(ballX,ballY,ballWidth,ballHeight);
+
+    drawRect(ballX,ballY,ballWidth,ballHeight);
+    // console.log(ballX);
+    // console.log(ballY);
+}
+
+function renderLeftPaddle() {
+    drawRect(lPX,lPY,lPWidth,lPHeight);
+}
+function update() {
+    // ur mum
+    clearScreen();
+
+    if ( (ballX >= screenWidth - ballWidth)) {// || (ballX < 0)
+       ballXVelocity = ballXVelocity * -1;
+    }
+    ballX = ballX + ballXVelocity;
+
+    if ( (ballY >= screenHeight - ballHeight) || (ballY < 0)) {
+        ballYVelocity = ballYVelocity * -1;
+    }
+    ballY=ballY+ballYVelocity;
+
+    if(ballColPaddle()) {
+        //rgjhurhvrgurhgrug
+        ballXVelocity = ballXVelocity * -1;
+        // console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAOMGIHITTHEPADDLLE");
+    }
+}
+
+function render() {
+    renderBall();
+    renderLeftPaddle();
+}
+
+setInterval( function () {
+update();
+render();
+}, 1000/60)
+
+</script>
+
+</body>
+</html>
+
